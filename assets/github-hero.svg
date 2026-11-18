@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="RelayHub">
+  <title>RelayHub — 多中转站 API Key 管理器</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#151D31"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22C55E" stop-opacity="0"/>
+      <stop offset="1" stop-color="#22C55E" stop-opacity=".55"/>
+    </linearGradient>
+    <style>
+      .h1 { font-family: 'JetBrains Mono','Cascadia Code',Consolas,monospace; font-weight: 700; }
+      .p  { font-family: 'IBM Plex Sans','Segoe UI','Microsoft YaHei',system-ui,sans-serif; }
+      .card { fill: #1B2336; stroke: #334155; stroke-width: 1; rx: 10; }
+      .muted { fill: #94A3B8; }
+    </style>
+  </defs>
+
+  <!-- 底板 -->
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect y="636" width="1280" height="4" fill="url(#edge)"/>
+
+  <!-- 装饰性网格点 -->
+  <g fill="#22C55E" opacity=".14">
+    <circle cx="90" cy="80" r="2.5"/><circle cx="150" cy="80" r="2.5"/><circle cx="210" cy="80" r="2.5"/>
+    <circle cx="90" cy="140" r="2.5"/><circle cx="150" cy="140" r="2.5"/><circle cx="210" cy="140" r="2.5"/>
+    <circle cx="1070" cy="560" r="2.5"/><circle cx="1130" cy="560" r="2.5"/><circle cx="1190" cy="560" r="2.5"/>
+    <circle cx="1070" cy="500" r="2.5"/><circle cx="1130" cy="500" r="2.5"/><circle cx="1190" cy="500" r="2.5"/>
+  </g>
+
+  <!-- Logo 标记 -->
+  <g transform="translate(72, 76) scale(0.19)">
+    <rect width="512" height="512" rx="116" fill="#0B1120" stroke="#334155" stroke-width="6"/>
+    <g stroke="#22C55E" stroke-width="44" stroke-linecap="round">
+      <line x1="256" y1="198" x2="256" y2="88"/>
+      <line x1="305.6" y1="284.6" x2="401.4" y2="339.9"/>
+      <line x1="206.4" y1="284.6" x2="110.6" y2="339.9"/>
+    </g>
+    <circle cx="256" cy="256" r="58" fill="#22C55E"/>
+  </g>
+
+  <!-- 标题 -->
+  <text x="188" y="138" class="h1" font-size="64" fill="#F8FAFC">Relay<tspan fill="#22C55E">Hub</tspan></text>
+  <text x="190" y="176" class="p" font-size="22" fill="#94A3B8">多中转站 API Key 管理器 · 一键下发 Key</text>
+
+  <!-- 主标语 -->
+  <text x="72" y="264" class="p" font-size="34" font-weight="600" fill="#F8FAFC">把散落各处的中转站 Key，收进一个本地应用</text>
+  <text x="72" y="308" class="p" font-size="19" fill="#94A3B8">纯本地运行 · 凭据 DPAPI 加密 · 无遥测 · 开源 (MIT)</text>
+
+  <!-- 功能卡片 × 4 -->
+  <g class="card">
+    <rect x="72"  y="346" width="260" height="112" rx="10" class="card"/>
+    <text x="92"  y="380" class="p" font-size="16" font-weight="600" fill="#22C55E">多站账号管理</text>
+    <text x="92"  y="404" class="p" font-size="12.5" fill="#94A3B8">登录中转站，自动拉取余额</text>
+    <text x="92"  y="424" class="p" font-size="12.5" fill="#94A3B8">与全部 Key，打码自动补拉</text>
+  </g>
+  <g class="card">
+    <rect x="352" y="346" width="260" height="112" rx="10" class="card"/>
+    <text x="372" y="380" class="p" font-size="16" font-weight="600" fill="#22C55E">一键下发配置</text>
+    <text x="372" y="404" class="p" font-size="12.5" fill="#94A3B8">6 个 Agent：备份 → 指纹校验</text>
+    <text x="372" y="424" class="p" font-size="12.5" fill="#94A3B8">→ 原子写 → 事务日志 → 可撤销</text>
+  </g>
+  <g class="card">
+    <rect x="632" y="346" width="260" height="112" rx="10" class="card"/>
+    <text x="652" y="380" class="p" font-size="16" font-weight="600" fill="#22C55E">比价 + 模型定价</text>
+    <text x="652" y="404" class="p" font-size="12.5" fill="#94A3B8">解析计费表达式（真实 USD/M）</text>
+    <text x="652" y="424" class="p" font-size="12.5" fill="#94A3B8">四级级联筛选，最低价标记</text>
+  </g>
+  <g class="card">
+    <rect x="912" y="346" width="260" height="112" rx="10" class="card"/>
+    <text x="932" y="380" class="p" font-size="16" font-weight="600" fill="#22C55E">模型验真 / 注入检测</text>
+    <text x="932" y="404" class="p" font-size="12.5" fill="#94A3B8">真实调用·身份探测·系统提示</text>
+    <text x="932" y="424" class="p" font-size="12.5" fill="#94A3B8">注入探针，判套壳降智</text>
+  </g>
+
+  <!-- 支持的 Agent 徽标行 -->
+  <text x="72" y="516" class="p" font-size="14" fill="#94A3B8">支持</text>
+  <g class="p" font-size="13.5" fill="#F8FAFC">
+    <text x="110" y="516">Claude Code</text><text x="230" y="516">Codex</text><text x="320" y="516">Gemini CLI</text>
+    <text x="450" y="516">Grok Build</text><text x="580" y="516">OpenClaw</text><text x="700" y="516">Hermes</text>
+  </g>
+
+  <!-- 协议行 -->
+  <text x="72" y="560" class="p" font-size="12.5" fill="#64748B">协议支持：new-api / one-api 系 · Sub2API · Anthropic 直连 · 通用贴 Key（Turnstile 走浏览器代登）</text>
+
+  <!-- 底部安装命令条 -->
+  <g>
+    <rect x="72" y="580" width="390" height="36" rx="8" fill="#1B2336" stroke="#334155"/>
+    <text x="90" y="603" class="p" font-size="13" fill="#22C55E" font-family="JetBrains Mono, Consolas, monospace">git clone github.com/jinchaoqiang0311/RelayHub</text>
+  </g>
+  <a href="https://github.com/jinchaoqiang0311/RelayHub/releases/latest">
+    <rect x="480" y="580" width="220" height="36" rx="8" fill="#22C55E"/>
+    <text x="590" y="603" class="p" font-size="13.5" font-weight="600" fill="#0B1120" text-anchor="middle">⬇ 下载安装包</text>
+  </a>
+</svg>

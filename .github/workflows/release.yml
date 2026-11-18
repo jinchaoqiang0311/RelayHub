@@ -49,6 +49,8 @@ jobs:
       - name: Build distributables
         run: pnpm dist
         env:
+          # GitHub token：electron-builder 自动发布 latest.yml 到 Release（自动更新元数据）
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # 签名凭据由仓库 Secrets 提供（无签名也能出包，只是未签名）
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
@@ -57,7 +59,8 @@ jobs:
         shell: bash
         run: |
           mkdir -p release-assets
-          find dist -maxdepth 1 -type f \( -name '*.exe' -o -name '*.AppImage' -o -name '*.deb' -o -name '*.zip' \) -exec cp {} release-assets/ \;
+          # 含 latest.yml / latest-linux.yml（自动更新元数据，必须与安装包一起上传）
+          find dist -maxdepth 1 -type f \( -name '*.exe' -o -name '*.AppImage' -o -name '*.deb' -o -name '*.zip' -o -name 'latest*.yml' \) -exec cp {} release-assets/ \;
           ls -la release-assets
 
       - name: Upload artifacts

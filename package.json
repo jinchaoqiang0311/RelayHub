@@ -32,7 +32,7 @@
     "productName": "RelayHub",
     "directories": { "output": "dist", "buildResources": "build" },
     "files": ["src/**/*", "assets/**/*", "package.json"],
-    "publish": [{ "provider": "generic", "url": "https://updates.example.com/relayhub/" }],
+    "publish": [{ "provider": "github" }],
     "win": { "target": [{ "target": "nsis", "arch": ["x64"] }], "icon": "build/icon.ico" },
     "nsis": {
       "oneClick": false,

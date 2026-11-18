@@ -280,6 +280,7 @@ function renderSettings() {
     <p class="muted" style="margin-top:10px">RelayHub v0.18.3 — 多中转站 API Key 管理器。每个 Agent 的写入均为 additive 合并，保留你原有的其它配置；覆盖前自动备份并校验文件指纹。</p>
     <div class="row" style="margin-top:8px">
       <button class="btn" id="btn-check-update">检查更新</button>
+      <span class="muted" id="update-hint">自动更新走 GitHub Releases（启动 / 每 6 小时检查一次，下载后重启即装）</span>
       <span class="muted" id="update-status"></span>
     </div>
   </section>`;
