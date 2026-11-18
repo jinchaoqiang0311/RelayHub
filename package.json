@@ -49,6 +49,6 @@
       "notarize": true,
       "entitlements": "build/entitlements.mac.plist"
     },
-    "linux": { "target": ["AppImage", "deb"], "category": "Utility", "maintainer": "YG" }
+    "linux": { "target": ["AppImage", "deb"], "category": "Utility", "maintainer": "YG", "icon": "assets/icon-512.png" }
   }
 }
