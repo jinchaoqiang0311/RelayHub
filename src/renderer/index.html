@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'" />
+  <title>RelayHub</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 512 512" width="20" height="20" aria-hidden="true">
+          <rect width="512" height="512" rx="116" fill="#0F172A"/>
+          <g stroke="#22C55E" stroke-width="44" stroke-linecap="round">
+            <line x1="256" y1="198" x2="256" y2="88"/>
+            <line x1="305.6" y1="284.6" x2="401.4" y2="339.9"/>
+            <line x1="206.4" y1="284.6" x2="110.6" y2="339.9"/>
+          </g>
+          <circle cx="256" cy="256" r="58" fill="#22C55E"/>
+        </svg>
+        <span class="brand-name">Relay<span class="brand-accent">Hub</span></span>
+      </div>
+      <nav>
+        <button class="nav-btn active" data-view="dashboard">看板</button>
+        <button class="nav-btn" data-view="stations">中转站</button>
+        <button class="nav-btn" data-view="deploy">一键配置</button>
+        <button class="nav-btn" data-view="compare">比价</button>
+        <button class="nav-btn" data-view="settings">设置</button>
+      </nav>
+      <div class="sidebar-foot">多中转站 · 一键下发 Key</div>
+    </aside>
+    <main id="main"></main>
+  </div>
+  <div id="toasts"></div>
+  <script src="app.js"></script>
+</body>
+</html>

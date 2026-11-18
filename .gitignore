@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+test/tmp-data/
+test/tmp-*
+test/*.log
+test/*.png
+test/ui-shot*.png
+*.log
+*.dmp
+.DS_Store
+Thumbs.db

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="RelayHub">
+  <title>RelayHub</title>
+  <!-- 品牌规范：纯色，无渐变/无阴影/无描边特效（brand/references/logo-usage-rules.md） -->
+  <!-- 概念：中心枢纽（hub）+ 三向中继臂（relay），指向多站点 / 多 Agent 分发 -->
+  <rect width="512" height="512" rx="116" fill="#0F172A"/>
+  <g stroke="#22C55E" stroke-width="44" stroke-linecap="round">
+    <line x1="256" y1="198" x2="256" y2="88"/>
+    <line x1="305.6" y1="284.6" x2="401.4" y2="339.9"/>
+    <line x1="206.4" y1="284.6" x2="110.6" y2="339.9"/>
+  </g>
+  <circle cx="256" cy="256" r="58" fill="#22C55E"/>
+</svg>

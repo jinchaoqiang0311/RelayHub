@@ -1,0 +1,54 @@
+{
+  "name": "relayhub",
+  "productName": "RelayHub",
+  "version": "0.18.3",
+  "description": "多中转站 API Key 管理器：一键把任意中转站的 Key 配置到已安装的 AI Agent（Claude Code / Codex / Gemini CLI / Grok Build / OpenClaw / Hermes）",
+  "author": "YG",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "main": "./src/main/main.cjs",
+  "bin": { "relayhub": "./bin/relayhub.js" },
+  "engines": { "node": ">=20" },
+  "pnpm": { "onlyBuiltDependencies": ["electron", "electron-winstaller", "esbuild"] },
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "cli": "node bin/relayhub.js",
+    "dist": "electron-builder --win nsis",
+    "check": "node bin/check-syntax.mjs"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9",
+    "smol-toml": "^1.9.0",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "electron": "^37.0.0",
+    "electron-builder": "^26.0.0"
+  },
+  "build": {
+    "appId": "com.yg.relayhub",
+    "productName": "RelayHub",
+    "directories": { "output": "dist", "buildResources": "build" },
+    "files": ["src/**/*", "assets/**/*", "package.json"],
+    "publish": [{ "provider": "generic", "url": "https://updates.example.com/relayhub/" }],
+    "win": { "target": [{ "target": "nsis", "arch": ["x64"] }], "icon": "build/icon.png" },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "installerIcon": "build/icon.png",
+      "uninstallerIcon": "build/icon.png"
+    },
+    "mac": {
+      "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }],
+      "category": "public.app-category.utilities",
+      "icon": "build/icon.png",
+      "hardenedRuntime": true,
+      "notarize": true,
+      "entitlements": "build/entitlements.mac.plist"
+    },
+    "linux": { "target": ["AppImage", "deb"], "category": "Utility", "maintainer": "YG", "icon": "build/icon.png" }
+  }
+}

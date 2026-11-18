@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="1200" height="320" role="img" aria-label="RelayHub">
+  <title>RelayHub — 横版组合</title>
+  <!-- 横版：图标 + 字标。留白 ≥ 图标高度（brand 规范 clear space） -->
+  <g transform="translate(40, 64)">
+    <rect width="192" height="192" rx="44" fill="#0F172A"/>
+    <g stroke="#22C55E" stroke-width="16.5" stroke-linecap="round">
+      <line x1="96" y1="74" x2="96" y2="33"/>
+      <line x1="114.6" y1="106.7" x2="150.5" y2="127.5"/>
+      <line x1="77.4" y1="106.7" x2="41.5" y2="127.5"/>
+    </g>
+    <circle cx="96" cy="96" r="21.8" fill="#22C55E"/>
+  </g>
+  <text x="288" y="176" fill="#F8FAFC" font-family="'JetBrains Mono', 'Cascadia Code', Consolas, monospace" font-size="86" font-weight="600" letter-spacing="-1">Relay<tspan fill="#22C55E">Hub</tspan></text>
+  <text x="290" y="222" fill="#94A3B8" font-family="'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif" font-size="24" letter-spacing="2.5">多中转站 · 一键下发 Key</text>
+</svg>
