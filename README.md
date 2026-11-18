@@ -90,6 +90,21 @@
 
 ## 安装
 
+### 从 Release 下载（推荐）
+
+<div align="center">
+
+**[⬇️ 前往 Releases 下载安装包](https://github.com/jinchaoqiang0311/RelayHub/releases/latest)**
+
+</div>
+
+| 平台 | 文件 |
+|---|---|
+| Windows | `RelayHub.Setup.<版本>.exe`（NSIS 安装包，含品牌图标） |
+| Linux | `RelayHub-<版本>.AppImage` / `relayhub_<版本>_amd64.deb` |
+
+每次打 `v*` 标签，CI 自动跑全量测试并构建上传。
+
 ### 从源码运行
 
 ```bash
@@ -101,10 +116,10 @@ pnpm start
 
 > 需要 Node.js ≥ 20 与 pnpm。Windows 下若 pnpm 被 ExecutionPolicy 拦截，用 `cmd /c pnpm install`。
 
-### 打包安装包
+### 打包安装包（本地）
 
 ```bash
-pnpm dist        # Windows NSIS 安装包（dist/ 下）
+pnpm dist        # Windows 出 NSIS exe；Linux 出 AppImage/deb（按当前平台）
 ```
 
 ### 日常启动（开发环境）
