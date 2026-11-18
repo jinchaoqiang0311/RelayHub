@@ -16,7 +16,7 @@
     "dev": "electron .",
     "cli": "node bin/relayhub.js",
     "dist": "electron-builder",
-    "check": "node bin/check-syntax.mjs"
+    "check": "node bin/check-syntax.mjs && node test/ui-check.mjs"
   },
   "dependencies": {
     "electron-updater": "^6.3.9",

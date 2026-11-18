@@ -1,6 +1,8 @@
 <div align="center">
+EN | [中文](#这是什么)
 
-<img src="assets/logo-full.svg" alt="RelayHub" width="720">
+
+<img src="assets/github-hero.svg" alt="RelayHub — 多中转站 API Key 管理器" width="100%">
 
 **多中转站 · 一键下发 Key**
 
@@ -93,6 +95,8 @@
 ### 从 Release 下载（推荐）
 
 <div align="center">
+EN | [中文](#这是什么)
+
 
 **[⬇️ 前往 Releases 下载安装包](https://github.com/jinchaoqiang0311/RelayHub/releases/latest)**
 
