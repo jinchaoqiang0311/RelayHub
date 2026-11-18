@@ -1,6 +1,5 @@
 node_modules/
 dist/
-build/
 test/tmp-data/
 test/tmp-*
 test/*.log
