@@ -26,7 +26,23 @@
     webviewEl = $('#aip-webview', main);
     const urlEl = $('#aip-url', main);
 
+    // Electron webview shadow DOM 默认 iframe height:150px，必须注入样式覆盖
+    const fixShadowHeight = () => {
+      try {
+        const sr = webviewEl.shadowRoot;
+        if (!sr) return;
+        let style = sr.querySelector('style[data-relayhub-fix]');
+        if (!style) {
+          style = document.createElement('style');
+          style.setAttribute('data-relayhub-fix', '1');
+          sr.appendChild(style);
+        }
+        style.textContent = ':host { display: flex !important; } iframe { width: 100% !important; height: 100% !important; flex: 1 1 auto !important; min-height: 0 !important; display: block !important; }';
+      } catch { /* shadow 不可访问时忽略 */ }
+    };
+    fixShadowHeight();
     webviewEl.addEventListener('dom-ready', () => {
+      fixShadowHeight();
       if (urlEl) urlEl.textContent = webviewEl.getURL();
     });
     webviewEl.addEventListener('did-navigate', () => {
