@@ -48,7 +48,12 @@ if (process.env.RELAYHUB_GPU !== '1') {
 
 // —— 崩溃/异常留痕：写入 <userData>/crash.log，便于事后定位“窗口突然消失” ——
 let appQuitting = false;
-app.on('before-quit', () => { appQuitting = true; });
+if (app && typeof app.on === 'function') {
+  app.on('before-quit', () => { appQuitting = true; });
+} else {
+  console.error('[RelayHub] electron app 不可用 —— 疑似 ELECTRON_RUN_AS_NODE=1 环境，已退出');
+  process.exit(1);
+}
 function logCrash(kind, detail) {
   if (appQuitting && kind === 'child-process-gone') return; // 退出时子进程被回收是正常现象，不记假崩溃
   try {
@@ -59,8 +64,8 @@ function logCrash(kind, detail) {
 }
 process.on('uncaughtException', (err) => logCrash('uncaughtException', err?.stack ?? String(err)));
 process.on('unhandledRejection', (reason) => logCrash('unhandledRejection', String(reason)));
-app.on('render-process-gone', (_e, _wc, details) => logCrash('render-process-gone', JSON.stringify(details)));
-app.on('child-process-gone', (_e, details) => logCrash('child-process-gone', JSON.stringify(details)));
+if (app && typeof app.on === 'function') { app.on('render-process-gone', (_e, _wc, details) => logCrash('render-process-gone', JSON.stringify(details))); }
+if (app && typeof app.on === 'function') { app.on('child-process-gone', (_e, details) => logCrash('child-process-gone', JSON.stringify(details))); }
 
 async function bootstrap() {
   const { createServices, electronCrypto } = await import('./services/index.js');
@@ -157,6 +162,11 @@ function registerIpc() {
     return buildDashboard(services.store, agentsProbe, todayRows);
   });
   handle('stats:journal', () => services.deploy.journal());
+
+  // AI 排行榜（内嵌站点）辅助通道
+  ipcMain.on('aip:open-external', (_e, url) => {
+    if (typeof url === 'string' && url.startsWith('http')) shell.openExternal(url);
+  });
 
   // 比价：本地价格库
   handle('book:sync', (p) => services.books.syncAll(p));
@@ -263,8 +273,8 @@ async function collectLoginMaterial(win, hostname, baseUrl) {
   let url = '';
   try { url = win.webContents.getURL(); } catch { /* ignore */ }
 
-  // 页面扫描：JWT + userId + sid（失败不影响 cookie 判定）
-  let scan = { jwt: null, userId: null, username: null, sid: null };
+  // 页面扫描：JWT + userId + sid + Sub2API 的 auth_token/refresh_token（失败不影响 cookie 判定）
+  let scan = { jwt: null, userId: null, username: null, sid: null, authToken: null, refreshToken: null };
   try {
     scan = await win.webContents.executeJavaScript(`(() => {
       const out = { jwt: null, userId: null, username: null, sid: null };
@@ -276,6 +286,8 @@ async function collectLoginMaterial(win, hostname, baseUrl) {
             const v = store.getItem(k);
             if (typeof v !== 'string') continue;
             if (!out.jwt && v.startsWith('eyJ') && v.split('.').length >= 2) out.jwt = v;
+            if (/^(auth_token|token)$/i.test(k) && v.length > 20 && !out.authToken) out.authToken = v;
+            if (/^refresh_token$/i.test(k) && v.length > 20 && !out.refreshToken) out.refreshToken = v;
             let o = null;
             try { o = JSON.parse(v); } catch { /* 非 JSON */ }
             const walk = (obj, depth) => {
@@ -405,11 +417,11 @@ async function browserLoginWindow(stationId) {
       const { cookieStr, url, scan } = mat;
       const leftLogin = Boolean(url) && !isLoginPageUrl(url);
 
-      // JWT 型站点
-      if (scan?.jwt) {
+      // JWT 型站点 + 非 JWT 的 Bearer token 型站点（如 Sub2API 的 auth_token，非 eyj 形态）
+      if (scan?.jwt || scan?.authToken) {
         try {
-          const v = await services.stations.verifySession(stationId, { accessToken: scan.jwt, userId: scan.userId ?? null });
-          if (v.ok) return finish({ accessToken: scan.jwt, userId: v.userId ?? scan.userId, username: v.username });
+          const v = await services.stations.verifySession(stationId, { accessToken: scan.jwt ?? scan.authToken, userId: scan.userId ?? null });
+          if (v.ok) return finish({ accessToken: v.accessToken ?? scan.jwt ?? scan.authToken, userId: v.userId ?? scan.userId, username: v.username, refreshToken: v.refreshToken ?? scan.refreshToken ?? null });
         } catch { /* 下一轮 */ }
       }
 
@@ -462,11 +474,12 @@ async function captureLoginSession(stationId) {
   if (!station) throw new Error(`找不到中转站: ${stationId}`);
   const hostname = (() => { try { return new URL(station.baseUrl).hostname; } catch { return null; } })();
   const mat = await collectLoginMaterial(win, hostname, station.baseUrl);
-  if (!mat.cookieStr && !mat.scan?.jwt) throw new Error('没抓到任何会话材料（cookie/JWT 均为空），确认已在窗口里登录成功');
+  if (!mat.cookieStr && !mat.scan?.jwt && !mat.scan?.authToken) throw new Error('没抓到任何会话材料（cookie/token 均为空），确认已在窗口里登录成功');
 
   let payload = {
     ...(mat.cookieStr ? { cookie: mat.cookieStr } : {}),
-    ...(mat.scan?.jwt ? { accessToken: mat.scan.jwt } : {}),
+    ...(mat.scan?.jwt || mat.scan?.authToken ? { accessToken: mat.scan.jwt ?? mat.scan.authToken } : {}),
+    ...(mat.scan?.refreshToken ? { refreshToken: mat.scan.refreshToken } : {}),
     userId: mat.scan?.userId ?? null,
     sid: mat.scan?.sid ?? null,
   };

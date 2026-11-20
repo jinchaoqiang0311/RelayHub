@@ -1263,6 +1263,7 @@ function render() {
     : state.view === 'stations' ? renderStations()
       : state.view === 'deploy' ? renderDeploy()
         : state.view === 'compare' ? renderCompare()
+          : state.view === 'aipaihangbang' ? (window.siteView?.mountAipaihangbangView('https://aipaihangbang.cn'), '<div id="site-view-host"></div>')
           : renderSettings();
   $$('.nav-btn').forEach((b) => b.classList.toggle('active', b.dataset.view === state.view));
 

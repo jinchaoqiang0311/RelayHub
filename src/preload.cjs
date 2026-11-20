@@ -15,6 +15,9 @@ const CHANNELS = new Set([
 ]);
 
 contextBridge.exposeInMainWorld('relayhub', {
+  openExternal: (url) => {
+    if (typeof url === 'string' && url.startsWith('http')) ipcRenderer.send('aip:open-external', url);
+  },
   invoke: (channel, payload) => {
     if (!CHANNELS.has(channel)) return Promise.resolve({ ok: false, error: `未授权通道: ${channel}` });
     return ipcRenderer.invoke(channel, payload);
