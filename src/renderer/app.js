@@ -37,6 +37,11 @@ async function refreshAll() {
 /* ---------------- 看板视图 ---------------- */
 const STATUS_BADGE = { ok: ['ok', '正常'], warn: ['warn', '有告警'], invalid: ['err', '会话失效'], unknown: ['', '未同步'] };
 
+function renderAipaihangbang() {
+  // 站点视图组件接管 #main（mount 内部直接写 main.innerHTML，本函数返回 undefined 以跳过外层赋值）
+  window.siteView.mountAipaihangbangView('https://aipaihangbang.cn');
+}
+
 function renderDashboard() {
   const d = state.dashboard;
   if (!d) return '<h2>看板</h2><p class="sub">加载中…</p>';
@@ -1259,12 +1264,16 @@ async function onMainClick(e) {
 
 function render() {
   const main = $('#main');
-  main.innerHTML = state.view === 'dashboard' ? renderDashboard()
-    : state.view === 'stations' ? renderStations()
-      : state.view === 'deploy' ? renderDeploy()
-        : state.view === 'compare' ? renderCompare()
-          : state.view === 'aipaihangbang' ? (window.siteView?.mountAipaihangbangView('https://aipaihangbang.cn'), '<div id="site-view-host"></div>')
-          : renderSettings();
+  if (state.view === 'aipaihangbang') {
+    // 站点视图组件自己接管 #main（mount 内部写 innerHTML），外层不再赋值，避免 undefined 覆盖
+    renderAipaihangbang();
+  } else {
+    main.innerHTML = state.view === 'dashboard' ? renderDashboard()
+      : state.view === 'stations' ? renderStations()
+        : state.view === 'deploy' ? renderDeploy()
+          : state.view === 'compare' ? renderCompare()
+            : renderSettings();
+  }
   $$('.nav-btn').forEach((b) => b.classList.toggle('active', b.dataset.view === state.view));
 
   if (state.view === 'compare') {
