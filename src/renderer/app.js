@@ -151,7 +151,7 @@ function renderStations() {
         <h3>${esc(s.name)} <span class="badge ${s.protocol === 'newapi' ? 'ok' : ''}">${esc(protocolLabel(s.protocol))}</span>${invalid ? ' <span class="badge err">会话已失效</span>' : ''}</h3>
         <div class="row">
           ${LOGIN_PROTOCOLS.includes(s.protocol) ? `<button class="btn small" data-act="refresh" data-id="${esc(s.id)}">刷新</button>` : ''}
-          ${canLogin && (!hasSession || invalid) ? `<button class="btn small primary" data-act="login" data-id="${esc(s.id)}">${invalid ? '重新登录' : '登录'}</button>` : ''}
+          ${canLogin && (!hasSession || invalid) ? `<button class="btn small primary" data-act="login" data-id="${esc(s.id)}">${invalid ? (s.hasPassword ? '一键重新登录' : '重新登录') : (s.hasPassword ? '一键登录' : '登录')}</button>` : ''}
           <button class="btn small" data-act="probe" data-id="${esc(s.id)}">模型验真</button>
           <button class="btn small" data-act="pricing" data-id="${esc(s.id)}">定价</button>
           <button class="btn small" data-act="ratio" data-id="${esc(s.id)}">比例${s.rechargeRatio != null ? ' ' + s.rechargeRatio : ''}</button>
@@ -1153,6 +1153,25 @@ async function onMainClick(e) {
       const s = state.stations.find((x) => x.id === btn.dataset.id);
       let req = { needsTurnstile: false };
       try { req = await api('stations:loginRequirements', { stationId: s.id }); } catch { /* 探测失败按普通登录处理 */ }
+
+      // 已保存密码 + 非 Turnstile → 一键登录（不弹输入框）
+      if (s.hasPassword && !req.needsTurnstile) {
+        btn.disabled = true;
+        const origLabel = btn.textContent;
+        btn.textContent = '登录中…';
+        try {
+          await api('stations:login', { id: s.id });
+          await refreshAll(); render();
+          toast(`${s.name} 登录成功（使用已保存密码）`, 'ok');
+        } catch (err) {
+          btn.disabled = false; btn.textContent = origLabel;
+          if (/turnstile/i.test(err.message)) { return browserLoginFlow(s.id); }
+          toast(err.message, 'err');
+          await refreshAll().catch(() => {}); render();
+        }
+        return;
+      }
+
       if (req.needsTurnstile) {
         const el = dialog(`
           <h3>登录 ${esc(s.name)}</h3>
@@ -1200,13 +1219,15 @@ async function onMainClick(e) {
       const el = dialog(`
         <h3>登录 ${esc(s.name)}</h3>
         <label class="field">用户名</label><input id="lg-user" value="${esc(s.username ?? '')}" />
-        <label class="field">密码</label><input id="lg-pass" type="password" />
+        <label class="field">密码</label><input id="lg-pass" type="password" placeholder="${s.hasPassword ? '已保存，留空则使用旧密码' : '输入密码'}" />
+        ${s.hasPassword ? '<p class="muted" style="margin:4px 0;font-size:11.5px">✓ 密码已加密保存，留空即可一键登录；输入新密码则覆盖保存</p>' : ''}
         <div class="row" style="margin-top:14px"><button class="btn primary" id="lg-ok">登录</button><button class="btn" id="lg-cancel">取消</button></div>`);
       $('#lg-cancel', el).onclick = () => el.remove();
       $('#lg-ok', el).onclick = async () => {
         try {
-          await api('stations:login', { id: s.id, username: $('#lg-user', el).value.trim(), password: $('#lg-pass', el).value });
-          el.remove(); await refreshAll(); render(); toast('登录成功', 'ok');
+          const passVal = $('#lg-pass', el).value;
+          await api('stations:login', { id: s.id, username: $('#lg-user', el).value.trim(), ...(passVal ? { password: passVal } : {}) });
+          el.remove(); await refreshAll(); render(); toast('登录成功，密码已保存', 'ok');
         } catch (err) {
           if (/turnstile/i.test(err.message)) { el.remove(); return browserLoginFlow(s.id); }
           toast(err.message, 'err');

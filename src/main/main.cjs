@@ -178,6 +178,8 @@ function registerIpc() {
 
   handle('stations:list', () => services.store.state.stations.map((s) => ({
     ...s,
+    password: undefined, // 密码不下发渲染层，只暴露 hasPassword 标志
+    hasPassword: Boolean(s.password),
     sessionInvalid: Boolean(s.sessionInvalid),
     sessionError: s.sessionError ?? null,
     keys: s.keys.map((k) => ({ ...k, key: k.key ? k.key.slice(0, 8) + '…' + k.key.slice(-4) : null })),
