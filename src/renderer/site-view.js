@@ -19,7 +19,7 @@
           <button class="btn small" id="aip-external">在浏览器打开 ↗</button>
         </div>
         <div class="site-frame">
-          <webview id="aip-webview" src="${url}" allowpopups style="width:100%;height:100%"></webview>
+          <webview id="aip-webview" src="${url}" allowpopups></webview>
         </div>
       </div>`;
 
