@@ -224,10 +224,24 @@ export function createServices({ dataDir, cryptoProvider } = {}) {
 
       if (station.protocol === 'newapi' || station.protocol === 'sub2api') {
         const authed = Boolean(station.session?.cookie || station.session?.accessToken);
-        const [self, tokens] = await Promise.all([
+        let [self, tokens] = await Promise.all([
           client.self().catch(() => null),
           client.listTokens().catch(() => []),
         ]);
+        // 401 且有保存密码 → 自动重登一次（会话静默续期，用户无感）
+        if (!self && !tokens.length && station.password && authed) {
+          try {
+            const client2 = clientFor({ ...station, session: {} });
+            const { session: fresh } = await client2.login(station.username, station.password);
+            station.session = fresh;
+            await store.save();
+            client = clientFor(station); // 用新会话重建客户端
+            [self, tokens] = await Promise.all([
+              client.self().catch(() => null),
+              client.listTokens().catch(() => []),
+            ]);
+          } catch { /* 自动重登失败 → 走原有的失效标记路径 */ }
+        }
         if (!authed && !self && !tokens.length) {
           const msg = '未登录或会话已失效：请点「重新登录」建立会话（开启人机验证的站点会打开登录窗口）';
           await markInvalid(msg);
