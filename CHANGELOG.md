@@ -2,6 +2,22 @@
 
 本文件记录用户可感知的变更。格式参考 Keep a Changelog。
 
+## [0.18.4] - 2026-11-27
+
+### 新增
+
+- **AI 排行榜页**：侧栏内嵌 aipaihangbang.cn，可后退/刷新/浏览器打开
+- **密码自动保存 + 一键登录**：会话失效后点一下即恢复，无需重输密码（DPAPI 加密存储）
+- **会话失效自动重登**：后台同步遇 401 且已存密码时静默续期，用户无感
+- **自动更新**：electron-updater 走 GitHub Releases，启动/每 6 小时检查
+
+### 修复
+
+- 主窗口 webviewTag 未开启导致内嵌网页空白
+- webview shadow DOM iframe 默认 150px 高度裁切（guest 视口穿透修复）
+- 内嵌页布局溢出（webview 占满可视区）
+- 主进程 app 事件注册对 ELECTRON_RUN_AS_NODE 环境的防御
+
 ## [0.18.3] - 2026-11-18
 
 ### 首个公开版本
